@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93b182bc-13b5-4fd0-9d82-cdc46464ba13" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/lib/ShowDataPage.dart" afterPath="$PROJECT_DIR$/lib/ShowDataPage.dart" />
       <change beforePath="$PROJECT_DIR$/lib/SubmitForm.dart" afterPath="$PROJECT_DIR$/lib/SubmitForm.dart" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" afterPath="$PROJECT_DIR$/pubspec.lock" />
+      <change beforePath="$PROJECT_DIR$/lib/display_message.dart" afterPath="$PROJECT_DIR$/lib/display_message.dart" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -23,22 +21,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="display_message.dart" pinned="false" current-in-tab="false">
+      <file leaf-file-name="display_message.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/display_message.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="43" column="42" lean-forward="false" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
+            <state relative-caret-position="380">
+              <caret line="279" column="29" lean-forward="true" selection-start-line="279" selection-start-column="29" selection-end-line="279" selection-end-column="29" />
               <folding>
-                <element signature="e#405#575#0" expanded="false" />
-                <element signature="e#605#758#0" expanded="false" />
-                <element signature="e#797#953#0" expanded="false" />
-                <element signature="e#994#1161#0" expanded="false" />
-                <element signature="e#1195#1339#0" expanded="false" />
-                <element signature="e#1377#1522#0" expanded="false" />
-                <element signature="e#15096#15155#0" expanded="false" />
-                <element signature="e#15186#15243#0" expanded="false" />
-                <element signature="e#15282#15347#0" expanded="false" />
-                <element signature="e#15406#15490#0" expanded="false" />
+                <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#454#624#0" expanded="false" />
+                <element signature="e#654#807#0" expanded="false" />
+                <element signature="e#846#1002#0" expanded="false" />
+                <element signature="e#1043#1210#0" expanded="false" />
+                <element signature="e#1244#1388#0" expanded="false" />
+                <element signature="e#1426#1571#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -54,7 +49,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShowDataPage.dart" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ShowDataPage.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/ShowDataPage.dart">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="170">
@@ -71,8 +66,8 @@
       <file leaf-file-name="SubmitForm.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/SubmitForm.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="89" column="46" lean-forward="false" selection-start-line="89" selection-start-column="46" selection-end-line="89" selection-end-column="46" />
+            <state relative-caret-position="306">
+              <caret line="87" column="39" lean-forward="false" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -101,8 +96,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.pop</find>
-      <find>database</find>
       <find>databaseref</find>
       <find>true</find>
       <find>enableUpload</find>
@@ -131,6 +124,8 @@
       <find>this is</find>
       <find>name</find>
       <find>time</find>
+      <find>set</find>
+      <find>form</find>
     </findStrings>
     <replaceStrings>
       <replace>message</replace>
@@ -246,9 +241,9 @@
         <option value="$PROJECT_DIR$/pubspec.yaml" />
         <option value="$PROJECT_DIR$/lib/myComment.dart" />
         <option value="$PROJECT_DIR$/lib/friendprofile.dart" />
-        <option value="$PROJECT_DIR$/lib/display_message.dart" />
-        <option value="$PROJECT_DIR$/lib/SubmitForm.dart" />
         <option value="$PROJECT_DIR$/lib/ShowDataPage.dart" />
+        <option value="$PROJECT_DIR$/lib/SubmitForm.dart" />
+        <option value="$PROJECT_DIR$/lib/display_message.dart" />
       </list>
     </option>
   </component>
@@ -502,7 +497,7 @@
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936507" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13809524" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24761905" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -561,7 +556,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="16" />
+      <option name="time" value="17" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -849,35 +844,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/display_message.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="43" column="42" lean-forward="false" selection-start-line="43" selection-start-column="42" selection-end-line="43" selection-end-column="42" />
-          <folding>
-            <element signature="e#405#575#0" expanded="false" />
-            <element signature="e#605#758#0" expanded="false" />
-            <element signature="e#797#953#0" expanded="false" />
-            <element signature="e#994#1161#0" expanded="false" />
-            <element signature="e#1195#1339#0" expanded="false" />
-            <element signature="e#1377#1522#0" expanded="false" />
-            <element signature="e#15096#15155#0" expanded="false" />
-            <element signature="e#15186#15243#0" expanded="false" />
-            <element signature="e#15282#15347#0" expanded="false" />
-            <element signature="e#15406#15490#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/SubmitForm.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="89" column="46" lean-forward="false" selection-start-line="89" selection-start-column="46" selection-end-line="89" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/ShowDataPage.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -886,6 +852,32 @@
             <element signature="e#0#39#0" expanded="true" />
             <element signature="e#688#835#0" expanded="false" />
             <element signature="e#866#1059#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/SubmitForm.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="87" column="39" lean-forward="false" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/display_message.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="279" column="29" lean-forward="true" selection-start-line="279" selection-start-column="29" selection-end-line="279" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#454#624#0" expanded="false" />
+            <element signature="e#654#807#0" expanded="false" />
+            <element signature="e#846#1002#0" expanded="false" />
+            <element signature="e#1043#1210#0" expanded="false" />
+            <element signature="e#1244#1388#0" expanded="false" />
+            <element signature="e#1426#1571#0" expanded="false" />
           </folding>
         </state>
       </provider>

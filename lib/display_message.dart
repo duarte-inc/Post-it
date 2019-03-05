@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseapp/myComment.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:time_machine/time_machine.dart';
 
 class displaymessage extends StatefulWidget {
   @override
@@ -85,42 +86,46 @@ class _displaymessageState extends State<displaymessage> {
   }
 
   Future<String> _comments() async {
-
-    await new Future.delayed(new Duration(milliseconds: 100), ()
-    {
-      ref.child('node-name').child('$_newmessagetimestamp')
+    await new Future.delayed(new Duration(milliseconds: 100), () {
+      ref
+          .child('node-name')
+          .child('$_newmessagetimestamp')
           .child('comments')
           .once()
-          .then((DataSnapshot snap) {
-        var keys = snap.value.keys;
-        var data = snap.value;
+          .then(
+        (DataSnapshot snap) {
+          var keys = snap.value.keys;
+          var data = snap.value;
 
-        List list = [];
+          List list = [];
 
-        for (var key in keys) {
-          print('this is keys :$key');
+          for (var key in keys) {
+            print('this is keys :$key');
 
-          list.add(key);
-          list.sort();
-        }
+            list.add(key);
+            list.sort();
+          }
 
-        var reversed = list.reversed;
+          var reversed = list.reversed;
 
-        for (var newlist in reversed) {
-          myComment d = new myComment(
-            data[newlist]['name'],
-            data[newlist]['comment'],
-            data[newlist]['image_url'],
-          );
-          allData.add(d);
-        }
-        setState(() {});
-      },
+          for (var newlist in reversed) {
+            myComment d = new myComment(
+              data[newlist]['name'],
+              data[newlist]['comment'],
+              data[newlist]['image_url'],
+            );
+            allData.add(d);
+          }
+          setState(() {});
+        },
       );
     });
   }
 
-  var timestamp = new DateTime.now().millisecondsSinceEpoch;
+  static var now = Instant.now();
+  var timestamp = now.toString('yyyyMMddHHmm');
+
+//  var timestamp = new DateTime.now().millisecondsSinceEpoch;
 
   void submit_comment() {
     final form = formKey.currentState;
@@ -273,10 +278,16 @@ class _displaymessageState extends State<displaymessage> {
           new Expanded(
             child: allData.length == 0
                 ? new Center(
-                    child: FlareActor(
-                      'asset/linear.flr',
-                      animation: 'linear',
-                      fit: BoxFit.contain,
+                    child: new Container(
+                      child: Center(
+                        child: new Text('be first one to comment'),
+                      ),
+                      width: 200,
+                      height: 50,
+                      decoration: new BoxDecoration(
+                        borderRadius: BorderRadius.circular(25.0),
+                        color: Colors.orangeAccent,
+                      ),
                     ),
                   )
                 : new ListView.builder(
@@ -323,6 +334,7 @@ class _displaymessageState extends State<displaymessage> {
                   ),
                 )
               : new Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     new Padding(
                       padding: new EdgeInsets.only(left: 5.0),
@@ -340,19 +352,21 @@ class _displaymessageState extends State<displaymessage> {
                           key: formKey,
                           child: Padding(
                             padding: new EdgeInsets.only(left: 15.0),
-                            child: new TextFormField(
-                              autofocus: true,
-                              decoration: new InputDecoration(
-                                hintText: 'Write a Comment',
+                            child: Center(
+                              child: new TextFormField(
+                                autofocus: true,
+                                decoration: new InputDecoration(
+                                  hintText: 'Write a Comment',
+                                ),
+                                validator: (val) => val.length < 1
+                                    ? 'please enter message'
+                                    : null,
+                                style: new TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.white,
+                                ),
+                                onSaved: (val) => _message = val,
                               ),
-                              validator: (val) => val.length < 1
-                                  ? 'please enter message'
-                                  : null,
-                              style: new TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.white,
-                              ),
-                              onSaved: (val) => _message = val,
                             ),
                           ),
                         ),
@@ -482,7 +496,6 @@ class _displaymessageState extends State<displaymessage> {
       this._sendername = sender_name;
     });
   }
-
 
   void update_senderimageurl(String sender_image) {
     setState(() {

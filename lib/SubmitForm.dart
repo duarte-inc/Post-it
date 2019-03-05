@@ -61,11 +61,6 @@ class _FormPageState extends State<FormPage> {
     }
   }
 
-  void time(){
-    var now = Instant.now();
-    print("UTC is :$now");
-  }
-
   @override
   void initState() {
     // TODO: implement initState
