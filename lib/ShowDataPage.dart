@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' show Random;
 import 'package:firebaseapp/display_message.dart';
 import 'package:firebaseapp/friendprofile.dart';
+import 'package:time_machine/time_machine.dart';
 
 class ShowDataPage extends StatefulWidget {
   @override
@@ -45,6 +46,8 @@ class _ShowDataPageState extends State<ShowDataPage> {
   var _count_number_of_message = 0;
   var verify_email = '';
 
+
+
   static var time = new DateTime.now().millisecondsSinceEpoch;
 
   var _onTapIndex = 0;
@@ -55,6 +58,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
 
   @override
   void initState() {
+
     DatabaseReference ref = FirebaseDatabase.instance.reference();
 
     ref.child('node-name').once().then((DataSnapshot snap) {
@@ -286,9 +290,10 @@ class _ShowDataPageState extends State<ShowDataPage> {
                   padding: EdgeInsets.only(right: 10.0),
                 ),
                 new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new Text(
-                      '- $name',
+                      '$name',
 //                    style: TextStyle(color: Colors.white),
                     ),
                     new Text(

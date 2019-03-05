@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebaseapp/ShowDataPage.dart';
+import 'package:time_machine/time_machine.dart';
 
 class SubmitForm extends StatelessWidget {
   @override
@@ -60,6 +61,11 @@ class _FormPageState extends State<FormPage> {
     }
   }
 
+  void time(){
+    var now = Instant.now();
+    print("UTC is :$now");
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -74,7 +80,11 @@ class _FormPageState extends State<FormPage> {
       content: new Text("message posted"),
     );
     scaffoldKey.currentState.showSnackBar(snackbar);
-    var time = new DateTime.now().millisecondsSinceEpoch;
+
+    var now = Instant.now();
+    var time = now.toString('yyyyMMddHHmm');
+
+//    var time = new DateTime.now().millisecondsSinceEpoch;
 
     var date_day = new DateTime.now().day;
     var date_month = new DateTime.now().month;
