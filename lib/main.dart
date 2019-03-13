@@ -10,6 +10,8 @@ void main() => runApp(
       new MaterialApp(
         home: homepage(),
         debugShowCheckedModeBanner: false,
+        title: 'Post-it',
+        color: Colors.deepPurpleAccent,
       ),
     );
 
@@ -32,12 +34,16 @@ class _homepageState extends State<homepage> {
     var displayname = user.displayName;
     var photourl = user.photoUrl;
     var useremail = user.email;
+    var userid = user.uid;
+
     _display = displayname;
-    savealldata(photourl, displayname, useremail);
+    savealldata(photourl, displayname, useremail, userid);
     Navigator.push(
         context, MaterialPageRoute(builder: (contet) => ShowDataPage()));
 
-    print('bitch lasagna :$user');
+    print('User data :$user');
+
+    print('bitch lasagna :$userid');
 
     return null;
   }
@@ -139,18 +145,20 @@ class _homepageState extends State<homepage> {
     );
   }
 
-  void savealldata(String url, String name, String email) {
+  void savealldata(String url, String name, String email, String uid) {
     String newurl = url;
     String newname = name;
     String newemail = email;
-    savedata(newurl, newname, newemail);
+    String userid = uid;
+    savedata(newurl, newname, newemail, userid);
   }
 }
 
-Future<bool> savedata(String imageurl, String name, String email) async {
+Future<bool> savedata(String imageurl, String name, String email, String userid) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("image", imageurl);
   prefs.setString('name', name);
   prefs.setString('email', email);
+  prefs.setString('userid', userid);
   return prefs.commit();
 }

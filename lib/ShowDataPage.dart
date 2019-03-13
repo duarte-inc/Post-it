@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' show Random;
 import 'package:firebaseapp/display_message.dart';
 import 'package:firebaseapp/friendprofile.dart';
-import 'package:time_machine/time_machine.dart';
 
 class ShowDataPage extends StatefulWidget {
   @override
@@ -29,7 +28,6 @@ Future<String> getusername() async {
   return username;
 }
 
-
 class _ShowDataPageState extends State<ShowDataPage> {
   List<myData> allData = [];
   var sharemessage;
@@ -46,19 +44,18 @@ class _ShowDataPageState extends State<ShowDataPage> {
   var _count_number_of_message = 0;
   var verify_email = '';
 
-
-
   static var time = new DateTime.now().millisecondsSinceEpoch;
 
   var _onTapIndex = 0;
 
   List<String> timestamplist = [];
 
-  var _newname='';
+  var _newname = '';
+  List countofcomment = [];
+  int count = 0;
 
   @override
   void initState() {
-
     DatabaseReference ref = FirebaseDatabase.instance.reference();
 
     ref.child('node-name').once().then((DataSnapshot snap) {
@@ -77,16 +74,42 @@ class _ShowDataPageState extends State<ShowDataPage> {
       for (var newlist in reversed) {
         //list.sort();
         //list.reversed;
+        ref
+            .child('node-name')
+            .child('$newlist')
+            .child('comments')
+            .once()
+            .then((DataSnapshot datasnap) {
+          var key = datasnap.value.keys;
+          var commentsnap = datasnap.value;
 
+          print("this is key :$key");
+
+          print("Comment :$commentsnap");
+
+          for (var x in key) {
+            print('this is x:$x');
+
+            if (x != 'no-comments') {
+              count = count + 1;
+            } else if (x == 'no-comments') {
+              print('no comments hit :$x');
+            }
+          }
+          print('adding value count to list');
+          countofcomment.add(count);
+          count = 0;
+
+          setState(() {});
+        });
         timestamplist.add(newlist);
 
         myData d = new myData(
-          data[newlist]['name'],
-          data[newlist]['message'],
-          data[newlist]['msgtime'],
-          data[newlist]['image'],
-          verify_email = data[newlist]['email'],
-        );
+            data[newlist]['name'],
+            data[newlist]['message'],
+            data[newlist]['msgtime'],
+            data[newlist]['image'],
+            verify_email = data[newlist]['email']);
 
         if (verify_email == _newemail) {
           _count_number_of_message += 1;
@@ -151,7 +174,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
           child: new Container(
             padding: EdgeInsets.only(top: 03.0),
 //            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-            child: allData.length == 0
+            child:countofcomment.length == 0
                 ? new Center(
                     child: FlareActor(
                       'asset/linear.flr',
@@ -167,7 +190,8 @@ class _ShowDataPageState extends State<ShowDataPage> {
                           allData[index].message,
                           allData[index].msgtime,
                           allData[index].image,
-                          timestamplist[index]);
+                          timestamplist[index],
+                          countofcomment[index]);
                     },
                   ),
           ),
@@ -177,7 +201,8 @@ class _ShowDataPageState extends State<ShowDataPage> {
     );
   }
 
-  Widget UI(String name, String message, String datetime, String image, String timestamp) {
+  Widget UI(String name, String message, String datetime, String image,
+      String timestamp, int cmntcount) {
     return new InkWell(
       onTap: () {
         sharemessage = message;
@@ -236,10 +261,20 @@ class _ShowDataPageState extends State<ShowDataPage> {
                           onTap: () {
                             // Update -> comment on message
                           },
-                          child: new Icon(
-                            Icons.chat_bubble_outline,
-                            size: 20,
-                            color: Colors.white,
+                          child: Row(
+                            children: <Widget>[
+                              new Icon(
+                                Icons.chat_bubble_outline,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                              countofcomment.length == 0
+                                  ? new Text('0')
+                                  : Text(
+                                      '$cmntcount',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                            ],
                           ),
                         ),
                         new GestureDetector(
@@ -264,14 +299,17 @@ class _ShowDataPageState extends State<ShowDataPage> {
                   padding: EdgeInsets.all(10.0),
                 ),
                 new InkWell(
-                  onTap: (){
-                   if(_newname==name){
-                     Navigator.push(context, MaterialPageRoute(builder: (context)=>profile()));
-                   }
-                   else{
-                     Navigator.push(context, MaterialPageRoute(builder: (context)=>friendprofile()));
-                     Save_data(image, name, sharemessage, timestamp);
-                   }
+                  onTap: () {
+                    if (_newname == name) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => profile()));
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => friendprofile()));
+                      Save_data(image, name, sharemessage, timestamp);
+                    }
                   },
                   child: new Container(
                     width: 40.0,
@@ -313,7 +351,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
   }
 
   Future<Null> _handleRefresh() async {
-    await new Future.delayed(new Duration(seconds: 2));
+    await new Future.delayed(new Duration(seconds: 1));
     setState(() {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => ShowDataPage()));
@@ -339,6 +377,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
     String message_timestamp = timestamp;
     Save_SharedMessageData(newurl, newname, newmessage, message_timestamp);
   }
+
   void updatename(String name) {
     setState(() {
       this._newname = name;
@@ -352,8 +391,8 @@ Future<bool> savedatamessagecount(int message_count) async {
   return prefs.commit();
 }
 
-Future<bool> Save_SharedMessageData(
-    String imageurl, String name, String message, String message_timestamp) async {
+Future<bool> Save_SharedMessageData(String imageurl, String name,
+    String message, String message_timestamp) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('message_image', imageurl);
   prefs.setString('message_name', name);

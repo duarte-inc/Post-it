@@ -3,60 +3,73 @@ import 'package:firebaseapp/myData.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:firebaseapp/userpostdata.dart';
 
 class userpost extends StatefulWidget {
   @override
   _userpostState createState() => _userpostState();
 }
 
-Future<String> getemail() async {
+Future<String> getuserid() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String email = preferences.getString('email');
-  return email;
+  String userid = preferences.getString('userid');
+  return userid;
+}
+
+Future<String> getname() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String name = preferences.getString('name');
+  return name;
+}
+
+Future<String> getdata() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String url = prefs.getString('image');
+  return url;
 }
 
 class _userpostState extends State<userpost> {
-  List<myData> allData = [];
+  List<userpostdata> allData = [];
   var verify_email = '';
-  var _newemail = '';
+  var _userid = '';
+  String _newname;
+  String _newimgurl;
+
+  DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   void initState() {
-    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    getuserid().then(updateuserid);
+    getname().then(updatename);
+    getdata().then(updateurl);
 
-    ref.child('node-name').once().then(
-      (DataSnapshot snap) {
-        var keys = snap.value.keys;
-        var data = snap.value;
+    setState(() {});
 
-        List list = [];
+    _comments();
 
-        for (var key in keys) {
-          list.add(key);
-          list.sort();
-        }
+    // get email of the user
+  }
 
-        var reversed = list.reversed;
+  Future<String> _comments() async {
+    await new Future.delayed(
+      new Duration(milliseconds: 100),
+      () {
+        print("user id :$_userid");
 
-        for (var newlist in reversed) {
-          //list.sort();
-          //list.reversed;
-          myData d = new myData(
-            data[newlist]['name'],
-            data[newlist]['message'],
-            data[newlist]['msgtime'],
-            data[newlist]['image'],
-            verify_email = data[newlist]['email'],
-          );
-          if (verify_email == _newemail) {
-            allData.add(d);
+        ref.child('user').child('$_userid').once().then((DataSnapshot snap) {
+          var data = snap.value;
+          var key = snap.value.keys;
+
+          for (var x in key) {
+            userpostdata userdata =
+                new userpostdata(data[x]['message'], data[x]['msgtime']);
+
+            allData.add(userdata);
           }
-        }
-        print('passed email :$_newemail');
-        setState(() {});
+          setState(() {});
+          print("User Data is :$key");
+        });
       },
     );
-    // get email of the user
-    getemail().then(updateemail);
   }
 
   @override
@@ -84,19 +97,14 @@ class _userpostState extends State<userpost> {
             : new ListView.builder(
                 itemCount: allData.length,
                 itemBuilder: (_, index) {
-                  return UI(
-                    allData[index].name,
-                    allData[index].message,
-                    allData[index].msgtime,
-                    allData[index].image,
-                  );
+                  return UI(allData[index].message, allData[index].msgtime);
                 },
               ),
       ),
     );
   }
 
-  Widget UI(String name, String message, String time, String imageurl) {
+  Widget UI(String message, String time) {
     return Container(
       width: 300,
       margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
@@ -183,7 +191,7 @@ class _userpostState extends State<userpost> {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image: new NetworkImage('$imageurl'),
+                    image: new NetworkImage('$_newimgurl'),
                   ),
                 ),
               ),
@@ -193,7 +201,7 @@ class _userpostState extends State<userpost> {
               new Column(
                 children: <Widget>[
                   new Text(
-                    '- $name',
+                    '- $_newname',
 //                    style: TextStyle(color: Colors.white),
                   ),
                   new Text(
@@ -204,16 +212,28 @@ class _userpostState extends State<userpost> {
             ],
           ),
           new Padding(
-            padding: EdgeInsets.only(bottom: 15.0),
+            padding: EdgeInsets.only(bottom: 5.0),
           ),
         ],
       ),
     );
   }
 
-  void updateemail(String email) {
+  void updatename(String name) {
     setState(() {
-      this._newemail = email;
+      this._newname = name;
+    });
+  }
+
+  void updateurl(String url) {
+    setState(() {
+      this._newimgurl = url;
+    });
+  }
+
+  void updateuserid(String userid) {
+    setState(() {
+      this._userid = userid;
     });
   }
 }

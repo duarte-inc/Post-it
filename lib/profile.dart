@@ -27,10 +27,17 @@ Future<String> getname() async {
   return name;
 }
 
+Future<String> getuserid() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String userid = preferences.getString('userid');
+  return userid;
+}
+
 class _profileState extends State<profile> {
   String _newurl = '';
   String _newname = '';
   int _newcount;
+  String _userid;
 
   @override
   void initState() {
@@ -243,4 +250,5 @@ class _profileState extends State<profile> {
       print('Count of Message posted : $_newcount');
     });
   }
+
 }

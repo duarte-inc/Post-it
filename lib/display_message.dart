@@ -87,13 +87,7 @@ class _displaymessageState extends State<displaymessage> {
 
   Future<String> _comments() async {
     await new Future.delayed(new Duration(milliseconds: 100), () {
-      ref
-          .child('node-name')
-          .child('$_newmessagetimestamp')
-          .child('comments')
-          .once()
-          .then(
-        (DataSnapshot snap) {
+      ref.child('node-name').child('$_newmessagetimestamp').child('comments').once().then((DataSnapshot snap){
           var keys = snap.value.keys;
           var data = snap.value;
 
@@ -101,9 +95,13 @@ class _displaymessageState extends State<displaymessage> {
 
           for (var key in keys) {
             print('this is keys :$key');
-
-            list.add(key);
-            list.sort();
+            if(key!='no-comments') {
+              list.add(key);
+              list.sort();
+            }
+            else if(key=='no-comments'){
+              print('its found :$key');
+            }
           }
 
           var reversed = list.reversed;
@@ -163,17 +161,14 @@ class _displaymessageState extends State<displaymessage> {
 
   @override
   Widget build(BuildContext context) {
-    final double statusbarpadding = MediaQuery.of(context).padding.top;
     var size = MediaQuery.of(context).size.width;
+    var toppadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: new Column(
         children: <Widget>[
-          new Padding(
-            padding: new EdgeInsets.only(top: statusbarpadding),
-          ),
           new Container(
             color: Colors.deepPurpleAccent,
-            padding: new EdgeInsets.only(bottom: 20.0),
+            padding: new EdgeInsets.only(top: toppadding),
             child: Column(
               children: <Widget>[
                 new Container(
@@ -410,60 +405,58 @@ class _displaymessageState extends State<displaymessage> {
   }
 
   Widget commentUI(String cmnt_name, String cmnt_image, String cmnt) {
-    return new Card(
-      color: Colors.white30,
-      child: Column(
-        children: <Widget>[
-          new Padding(
-            padding: new EdgeInsets.only(top: 15.0),
-          ),
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              new Padding(
-                padding: EdgeInsets.only(left: 10.0),
-              ),
-              new Container(
-                width: 40,
-                height: 40,
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: new DecorationImage(
-                    fit: BoxFit.fill,
-                    image: new NetworkImage('$cmnt_image'),
-                  ),
+    return Column(
+      children: <Widget>[
+        new Padding(
+          padding: new EdgeInsets.only(top: 15.0),
+        ),
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            new Padding(
+              padding: EdgeInsets.only(left: 10.0),
+            ),
+            new Container(
+              width: 40,
+              height: 40,
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                image: new DecorationImage(
+                  fit: BoxFit.fill,
+                  image: new NetworkImage('$cmnt_image'),
                 ),
               ),
-              new Padding(
-                padding: new EdgeInsets.only(left: 20.0),
-              ),
-              new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  new Text(
-                    '$cmnt',
-                    style: new TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18.0),
-                    textAlign: TextAlign.start,
-                  ),
-                  new Text(
-                    '$cmnt_name',
-                    style: new TextStyle(
+            ),
+            new Padding(
+              padding: new EdgeInsets.only(left: 20.0),
+            ),
+            new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new Text(
+                  '$cmnt',
+                  style: new TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          new Padding(
-            padding: new EdgeInsets.only(top: 10.0),
-          )
-        ],
-      ),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18.0),
+                  textAlign: TextAlign.start,
+                ),
+                new Text(
+                  '$cmnt_name',
+                  style: new TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w300,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+        new Padding(
+          padding: new EdgeInsets.only(top: 10.0),
+        ),
+        new Divider(color: Colors.black,)
+      ],
     );
   }
 
