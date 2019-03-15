@@ -20,9 +20,17 @@ class homepage extends StatefulWidget {
   _homepageState createState() => _homepageState();
 }
 
+Future<String> getaccesstoken() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String token = preferences.getString('token');
+  return token;
+}
+
 class _homepageState extends State<homepage> {
   final FirebaseAuth _fAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
+
+  var _token;
 
   var _display = '';
 
@@ -37,13 +45,17 @@ class _homepageState extends State<homepage> {
     var userid = user.uid;
 
     _display = displayname;
-    savealldata(photourl, displayname, useremail, userid);
+    savealldata(photourl, displayname, useremail, userid, gSA.accessToken);
     Navigator.push(
         context, MaterialPageRoute(builder: (contet) => ShowDataPage()));
 
-    print('User data :$user');
+    print('is this token :$gSA');
+    print('is this token :${gSA.idToken}');
+    print('is this token :${gSA.accessToken}');
 
-    print('bitch lasagna :$userid');
+//    print('User data :$user');
+//
+//    print('bitch lasagna :$userid');
 
     return null;
   }
@@ -51,7 +63,27 @@ class _homepageState extends State<homepage> {
   @override
   void initState() {
     // TODO: implement initState
+
+    getaccesstoken().then(updatetoken);
+
+    _gettoken();
+
     super.initState();
+  }
+
+
+  Future<String> _gettoken() async {
+    await new Future.delayed(new Duration(milliseconds: 1000), () {
+      print('this is received token :$_token');
+
+      if(_token != null){
+//        Navigator.push(context, MaterialPageRoute(builder: (context)=>ShowDataPage()));
+      }
+      else{
+        print('token not found login again');
+      }
+
+    });
   }
 
   void signout() {
@@ -145,20 +177,29 @@ class _homepageState extends State<homepage> {
     );
   }
 
-  void savealldata(String url, String name, String email, String uid) {
+  void updatetoken(String token) {
+    setState(() {
+      this._token = token;
+    });
+  }
+
+  void savealldata(String url, String name, String email, String uid, String access_token) {
     String newurl = url;
     String newname = name;
     String newemail = email;
     String userid = uid;
-    savedata(newurl, newname, newemail, userid);
+    String token = access_token;
+    savedata(newurl, newname, newemail, userid, token);
   }
 }
 
-Future<bool> savedata(String imageurl, String name, String email, String userid) async {
+
+Future<bool> savedata(String imageurl, String name, String email, String userid, String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("image", imageurl);
   prefs.setString('name', name);
   prefs.setString('email', email);
   prefs.setString('userid', userid);
+  prefs.setString('token', token);
   return prefs.commit();
 }

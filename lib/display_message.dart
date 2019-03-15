@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseapp/myComment.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:time_machine/time_machine.dart';
 
 class displaymessage extends StatefulWidget {
@@ -87,7 +86,13 @@ class _displaymessageState extends State<displaymessage> {
 
   Future<String> _comments() async {
     await new Future.delayed(new Duration(milliseconds: 100), () {
-      ref.child('node-name').child('$_newmessagetimestamp').child('comments').once().then((DataSnapshot snap){
+      ref
+          .child('node-name')
+          .child('$_newmessagetimestamp')
+          .child('comments')
+          .once()
+          .then(
+        (DataSnapshot snap) {
           var keys = snap.value.keys;
           var data = snap.value;
 
@@ -95,11 +100,10 @@ class _displaymessageState extends State<displaymessage> {
 
           for (var key in keys) {
             print('this is keys :$key');
-            if(key!='no-comments') {
+            if (key != 'no-comments') {
               list.add(key);
               list.sort();
-            }
-            else if(key=='no-comments'){
+            } else if (key == 'no-comments') {
               print('its found :$key');
             }
           }
@@ -120,8 +124,7 @@ class _displaymessageState extends State<displaymessage> {
     });
   }
 
-  static var now = Instant.now();
-  var timestamp = now.toString('yyyyMMddHHmm');
+
 
 //  var timestamp = new DateTime.now().millisecondsSinceEpoch;
 
@@ -136,6 +139,11 @@ class _displaymessageState extends State<displaymessage> {
   }
 
   void submit_comment_database() {
+    var now = Instant.now();
+    var timestamp = now.toString('yyyyMMddHHmmss');
+
+    print('this is comments timestamp :$timestamp');
+
     ref
         .child('node-name')
         .child('$_newmessagetimestamp')
@@ -164,6 +172,7 @@ class _displaymessageState extends State<displaymessage> {
     var size = MediaQuery.of(context).size.width;
     var toppadding = MediaQuery.of(context).padding.top;
     return Scaffold(
+      backgroundColor: Colors.white70,
       body: new Column(
         children: <Widget>[
           new Container(
@@ -240,12 +249,9 @@ class _displaymessageState extends State<displaymessage> {
                       ),
                       new GestureDetector(
                         onTap: () {
-                          // Update -> comment on message
-                          if (_display_comment == false) {
-                            _comments();
-                            _display_comment = true;
-                          }
-                          setState(() {});
+                          var time = new DateTime.now();
+                          print('$time');
+
                         },
                         child: new Icon(
                           Icons.chat_bubble_outline,
@@ -263,10 +269,13 @@ class _displaymessageState extends State<displaymessage> {
                           size: 25,
                           color: Colors.white,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
+                new Padding(
+                  padding: new EdgeInsets.all(10.0),
+                )
               ],
             ),
           ),
@@ -338,10 +347,10 @@ class _displaymessageState extends State<displaymessage> {
                       padding: new EdgeInsets.only(bottom: 3.0, top: 3.0),
                       child: new Container(
                         width: (size - 60),
-                        height: 40.0,
+                        height: 35.0,
                         decoration: new BoxDecoration(
-                          borderRadius: new BorderRadius.circular(25.0),
-                          color: Colors.black45,
+                          borderRadius: new BorderRadius.circular(30.0),
+                          color: Colors.white,
                         ),
                         child: new Form(
                           key: formKey,
@@ -357,8 +366,8 @@ class _displaymessageState extends State<displaymessage> {
                                     ? 'please enter message'
                                     : null,
                                 style: new TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                  color: Colors.black,
                                 ),
                                 onSaved: (val) => _message = val,
                               ),
@@ -367,24 +376,22 @@ class _displaymessageState extends State<displaymessage> {
                         ),
                       ),
                     ),
+                    new Padding(padding: new EdgeInsets.all(1.0)),
                     new GestureDetector(
                       onTap: () {
                         submit_comment();
                         display_textbox = false;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => displaymessage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => displaymessage()));
                         setState(
                           () {},
                         );
                       },
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 35,
+                        height: 35,
                         decoration: new BoxDecoration(
                           borderRadius: new BorderRadius.circular(50.0),
-                          color: Colors.green,
+                          color: Colors.blueAccent,
                         ),
                         child: Center(
                           child: new Icon(
@@ -407,9 +414,9 @@ class _displaymessageState extends State<displaymessage> {
   Widget commentUI(String cmnt_name, String cmnt_image, String cmnt) {
     return Column(
       children: <Widget>[
-        new Padding(
-          padding: new EdgeInsets.only(top: 15.0),
-        ),
+//        new Padding(
+//          padding: new EdgeInsets.only(top: 15.0),
+//        ),
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -428,7 +435,7 @@ class _displaymessageState extends State<displaymessage> {
               ),
             ),
             new Padding(
-              padding: new EdgeInsets.only(left: 20.0),
+              padding: new EdgeInsets.only(left: 15.0),
             ),
             new Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,25 +444,27 @@ class _displaymessageState extends State<displaymessage> {
                   '$cmnt',
                   style: new TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18.0),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15.0),
                   textAlign: TextAlign.start,
                 ),
                 new Text(
                   '$cmnt_name',
                   style: new TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w300,
-                  ),
+                      color: Colors.black,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 10),
                 )
               ],
             ),
           ],
         ),
-        new Padding(
-          padding: new EdgeInsets.only(top: 10.0),
-        ),
-        new Divider(color: Colors.black,)
+//        new Padding(
+//          padding: new EdgeInsets.only(top: 5.0),
+//        ),
+        new Divider(
+          color: Colors.black,
+        )
       ],
     );
   }

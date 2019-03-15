@@ -21,6 +21,12 @@ Future<String> getemail() async {
   return email;
 }
 
+Future<String> getuserid() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String userid = preferences.getString('userid');
+  return userid;
+}
+
 Future<String> getusername() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String username = preferences.getString('name');
@@ -43,6 +49,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
   var _newemail = '';
   var _count_number_of_message = 0;
   var verify_email = '';
+  var _userid;
 
   static var time = new DateTime.now().millisecondsSinceEpoch;
 
@@ -109,7 +116,9 @@ class _ShowDataPageState extends State<ShowDataPage> {
             data[newlist]['message'],
             data[newlist]['msgtime'],
             data[newlist]['image'],
-            verify_email = data[newlist]['email']);
+            verify_email = data[newlist]['email'],
+            data[newlist]['userid']
+        );
 
         if (verify_email == _newemail) {
           _count_number_of_message += 1;
@@ -126,6 +135,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
 
     getemail().then(updateemail);
     getusername().then(updatename);
+    getuserid().then(updateuserid);
   }
 
   @override
@@ -149,9 +159,11 @@ class _ShowDataPageState extends State<ShowDataPage> {
               if (index == 1) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SubmitForm()));
+                Save_data(null, _newname, sharemessage, null, _userid, null);
               } else if (index == 2) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => profile()));
+                Save_data(null, _newname, sharemessage, null, _userid, null);
               }
             });
           },
@@ -191,7 +203,9 @@ class _ShowDataPageState extends State<ShowDataPage> {
                           allData[index].msgtime,
                           allData[index].image,
                           timestamplist[index],
-                          countofcomment[index]);
+                          countofcomment[index],
+                          allData[index].userid
+                      );
                     },
                   ),
           ),
@@ -201,8 +215,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
     );
   }
 
-  Widget UI(String name, String message, String datetime, String image,
-      String timestamp, int cmntcount) {
+  Widget UI(String name, String message, String datetime, String image, String timestamp, int cmntcount, String userid) {
     return new InkWell(
       onTap: () {
         sharemessage = message;
@@ -210,7 +223,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => displaymessage()));
         print('this is message timestamp :$time');
-        Save_data(image, name, sharemessage, timestamp);
+        Save_data(image, name, sharemessage, timestamp, userid, null);
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
@@ -303,12 +316,19 @@ class _ShowDataPageState extends State<ShowDataPage> {
                     if (_newname == name) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => profile()));
+                      Save_data(image, name, sharemessage, timestamp, userid, null);
+                      print('image :$image');
+                      print('user id :$userid');
+                      print('Name :$name');
                     } else {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => friendprofile()));
-                      Save_data(image, name, sharemessage, timestamp);
+                      Save_data(image, name, sharemessage, timestamp, null, userid);
+                      print('image :$image');
+                      print('user id :$userid');
+                      print('Name :$name');
                     }
                   },
                   child: new Container(
@@ -353,8 +373,7 @@ class _ShowDataPageState extends State<ShowDataPage> {
   Future<Null> _handleRefresh() async {
     await new Future.delayed(new Duration(seconds: 1));
     setState(() {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ShowDataPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ShowDataPage()));
     });
     return null;
   }
@@ -370,12 +389,14 @@ class _ShowDataPageState extends State<ShowDataPage> {
     savedatamessagecount(newcount);
   }
 
-  void Save_data(String url, String name, String message, String timestamp) {
+  void Save_data(String url, String name, String message, String timestamp, String userid, String frienduserid) {
     String newurl = url;
     String newname = name;
     String newmessage = message;
     String message_timestamp = timestamp;
-    Save_SharedMessageData(newurl, newname, newmessage, message_timestamp);
+    String newuserid = userid;
+    String newfrienduserid = frienduserid;
+    Save_SharedMessageData(newurl, newname, newmessage, message_timestamp, newuserid, newfrienduserid);
   }
 
   void updatename(String name) {
@@ -383,6 +404,13 @@ class _ShowDataPageState extends State<ShowDataPage> {
       this._newname = name;
     });
   }
+  void updateuserid(String userid) {
+    setState(() {
+      this._userid = userid;
+    });
+  }
+
+
 }
 
 Future<bool> savedatamessagecount(int message_count) async {
@@ -391,12 +419,13 @@ Future<bool> savedatamessagecount(int message_count) async {
   return prefs.commit();
 }
 
-Future<bool> Save_SharedMessageData(String imageurl, String name,
-    String message, String message_timestamp) async {
+Future<bool> Save_SharedMessageData(String imageurl, String name, String message, String message_timestamp, String userid, String frienduserid) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('message_image', imageurl);
   prefs.setString('message_name', name);
   prefs.setString('message', message);
   prefs.setString('message_timestamp', message_timestamp);
+  prefs.setString('userid',userid);
+  prefs.setString('frienduserid', frienduserid);
   return prefs.commit();
 }

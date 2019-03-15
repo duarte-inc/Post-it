@@ -5,14 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:firebaseapp/userpostdata.dart';
 
-class userpost extends StatefulWidget {
+class friendpost extends StatefulWidget {
   @override
-  _userpostState createState() => _userpostState();
+  _friendpostState createState() => _friendpostState();
 }
 
 Future<String> getuserid() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  String userid = preferences.getString('userid');
+  String userid = preferences.getString('frienduserid');
   return userid;
 }
 
@@ -28,7 +28,7 @@ Future<String> getdata() async {
   return url;
 }
 
-class _userpostState extends State<userpost> {
+class _friendpostState extends State<friendpost> {
   List<userpostdata> allData = [];
   var verify_email = '';
   var _userid = '';
@@ -57,7 +57,7 @@ class _userpostState extends State<userpost> {
   Future<String> _comments() async {
     await new Future.delayed(
       new Duration(milliseconds: 200),
-      () {
+          () {
         print("user id :$_userid");
 
         ref.child('user').child('$_userid').once().then((DataSnapshot snap) {
@@ -86,9 +86,9 @@ class _userpostState extends State<userpost> {
           }
 
           for (var x in normalkey) {
-              userpostdata userdata =
-              new userpostdata(data[x]['message'], data[x]['msgtime']);
-              allData.add(userdata);
+            userpostdata userdata =
+            new userpostdata(data[x]['message'], data[x]['msgtime']);
+            allData.add(userdata);
           }
           setState(() {});
           print("User Data is :$key");
@@ -113,18 +113,18 @@ class _userpostState extends State<userpost> {
 //            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
         child: allData.length == 0
             ? new Center(
-                child: FlareActor(
-                  'asset/linear.flr',
-                  animation: 'linear',
-                  fit: BoxFit.contain,
-                ),
-              )
+          child: FlareActor(
+            'asset/linear.flr',
+            animation: 'linear',
+            fit: BoxFit.contain,
+          ),
+        )
             : new ListView.builder(
-                itemCount: allData.length,
-                itemBuilder: (_, index) {
-                  return UI(allData[index].message, allData[index].msgtime);
-                },
-              ),
+          itemCount: allData.length,
+          itemBuilder: (_, index) {
+            return UI(allData[index].message, allData[index].msgtime);
+          },
+        ),
       ),
     );
   }

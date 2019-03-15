@@ -48,26 +48,17 @@ class _FormPageState extends State<FormPage> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
 
-
-
-
   String _newname;
   String _newurl;
   String _newemail;
   String _userid;
 
-  static var post_time = new DateTime.now();
-
   static DatabaseReference ref = FirebaseDatabase.instance.reference();
-
   String _message;
-
-
-  static var now = Instant.now();
-  var time = now.toString('yyyyMMddHHmm');
 
   @override
   void initState() {
+
 
     // TODO: implement initState
     getname().then(updatename);
@@ -79,22 +70,18 @@ class _FormPageState extends State<FormPage> {
 
   void _submit() {
     final form = formKey.currentState;
-
-
     if (form.validate()) {
       form.save();
-      submitmessage(time);
+      submitmessage();
     }
   }
 
-  void submitmessage(String time) {
-    final snackbar = new SnackBar(
-      content: new Text("message posted"),
-    );
-    scaffoldKey.currentState.showSnackBar(snackbar);
+  void submitmessage() {
 
+    var now = Instant.now();
+    var time = now.toString('yyyyMMddHHmmss');
 
-//    var time = new DateTime.now().millisecondsSinceEpoch;
+    print('this is post time :$time');
 
     var date_day = new DateTime.now().day;
     var date_month = new DateTime.now().month;
@@ -112,15 +99,19 @@ class _FormPageState extends State<FormPage> {
       ref.child('node-name').child('$time').child('msgtime').set('$date');
       ref.child('node-name').child('$time').child('image').set('$_newurl');
       ref.child('node-name').child('$time').child('email').set('$_newemail');
+      ref.child('node-name').child('$time').child('userid').set('$_userid');
       ref.child('node-name').child('$time').child('comments').child('no-comments').set('1');
 
       ref.child('user').child('$_userid').child('$time').child('message').set('$_message');
       ref.child('user').child('$_userid').child('$time').child('msgtime').set('$date');
+      ref.child('user').child('$_userid').child('name').set('$_newname');
+      ref.child('user').child('$_userid').child('imageurl').set('$_newurl');
 
 
     }
 
     // ignore: return_of_invalid_type_from_closure
+    Navigator.of(context).pop();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ShowDataPage()));
   }

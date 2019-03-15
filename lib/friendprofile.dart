@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebaseapp/profile.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebaseapp/userpost.dart';
+import 'package:firebaseapp/friendpost.dart';
 
 class friendprofile extends StatefulWidget {
   @override
@@ -14,6 +17,13 @@ Future<String> getname() async {
   return name;
 }
 
+Future<String> getuserid() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String userid = preferences.getString('frienduserid');
+  print('this is something :$userid');
+  return userid;
+}
+
 Future<String> getmessage_imageurl() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String url = prefs.getString('message_image');
@@ -24,17 +34,43 @@ Future<String> getmessage_imageurl() async {
 class _friendprofileState extends State<friendprofile> {
   var _sendername;
   var _senderimageurl;
-  var _newname;
+  var _userid;
+  
+  DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   @override
   void initState() {
     // TODO: implement initState
     getname().then(update_sendername);
     getmessage_imageurl().then(update_senderimageurl);
+    getuserid().then(update_userid);
+
     setState(() {});
 
+    userdata();
+
+    
     super.initState();
   }
+
+  Future userdata() async{
+
+    await new Future.delayed(Duration(milliseconds: 100),(){
+
+      ref.child('user').child('$_userid').once().then((DataSnapshot snap){
+
+        var data = snap.value;
+        var key = snap.key;
+
+        print('this is friends key :$key');
+        print('this is friends data :$data');
+
+      });
+
+    });
+
+  }
+
 
   void changepage() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => profile()));
@@ -137,7 +173,8 @@ class _friendprofileState extends State<friendprofile> {
                       ),
                       new GestureDetector(
                         onTap: () {
-//                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userpost()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>friendpost()));
+                        userdata();
                         },
                         child: new Container(
                           width: 135,
@@ -191,6 +228,12 @@ class _friendprofileState extends State<friendprofile> {
   void update_senderimageurl(String sender_image) {
     setState(() {
       this._senderimageurl = sender_image;
+    });
+  }
+
+  void update_userid(String userid) {
+    setState(() {
+      this._userid = userid;
     });
   }
 

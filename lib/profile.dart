@@ -161,6 +161,7 @@ class _profileState extends State<profile> {
 
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>userpost()));
+
                   },
 
                   child: new Container(
