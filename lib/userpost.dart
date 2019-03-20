@@ -40,17 +40,17 @@ class _userpostState extends State<userpost> {
   var name;
   var imageurl;
 
+  List new_normalkey = [];
+
   DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   void initState() {
     getuserid().then(updateuserid);
     getname().then(updatename);
     getdata().then(updateurl);
-
     setState(() {});
-
+    print('userid is :$_userid');
     _comments();
-
     // get email of the user
   }
 
@@ -82,12 +82,16 @@ class _userpostState extends State<userpost> {
               print('normal :$y');
               normalkey.add(y);
             }
-
           }
 
-          for (var x in normalkey) {
-              userpostdata userdata =
-              new userpostdata(data[x]['message'], data[x]['msgtime']);
+          for(var x in normalkey){
+            new_normalkey.add(x);
+            new_normalkey.sort();
+          }
+          var reversed = new_normalkey.reversed;
+
+          for (var x in reversed) {
+              userpostdata userdata = new userpostdata(data[x]['message'], data[x]['msgtime']);
               allData.add(userdata);
           }
           setState(() {});
@@ -95,6 +99,10 @@ class _userpostState extends State<userpost> {
         });
       },
     );
+
+    if(_userid == null){
+      _comments();
+    }
   }
 
   @override
@@ -110,7 +118,6 @@ class _userpostState extends State<userpost> {
       ),
       body: new Container(
         padding: EdgeInsets.only(top: 03.0),
-//            margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
         child: allData.length == 0
             ? new Center(
                 child: FlareActor(

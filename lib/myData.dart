@@ -1,5 +1,5 @@
 class myData {
-  String name, message, msgtime, image, email, userid;
+  String name, message, msgtime, image, userid;
 
-  myData(this.name, this.message, this.msgtime, this.image, this.email, this.userid);
+  myData(this.name, this.message, this.msgtime, this.image, this.userid);
 }

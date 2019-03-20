@@ -27,6 +27,7 @@ dev_dependencies:
   firebase_storage:
   image_picker:
   time_machine: ^0.9.8
+  flutter_twitter_login: ^1.1.0
 
 
 # For information on the generic Dart part of this file, see the

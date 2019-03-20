@@ -84,8 +84,14 @@ class _friendpostState extends State<friendpost> {
             }
 
           }
+          List list =[];
+          for (var x in normalkey){
+            list.add(x);
+            list.sort();
+          }
+          var new_normalkey = list.reversed;
 
-          for (var x in normalkey) {
+          for (var x in new_normalkey) {
             userpostdata userdata =
             new userpostdata(data[x]['message'], data[x]['msgtime']);
             allData.add(userdata);
@@ -95,6 +101,10 @@ class _friendpostState extends State<friendpost> {
         });
       },
     );
+
+    if(_userid == null){
+      _comments();
+    }
   }
 
   @override

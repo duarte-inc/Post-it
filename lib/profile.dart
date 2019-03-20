@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebaseapp/addimage.dart';
 import 'package:firebaseapp/userpost.dart';
+import 'package:firebaseapp/main.dart';
+import 'package:firebaseapp/ShowDataPage.dart';
 
 class profile extends StatefulWidget {
   @override
@@ -39,196 +42,122 @@ class _profileState extends State<profile> {
   int _newcount;
   String _userid;
 
+  final FirebaseAuth _fAuth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+
   @override
   void initState() {
     // TODO: implement initState
+
+
     getdata().then(updateurl);
     getname().then(updatename);
     getMessageCount().then(updateMessage_count);
     super.initState();
   }
 
+  void signout() {
+    googleSignIn.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var topheight = MediaQuery.of(context).padding.top;
+    var device_width = MediaQuery.of(context).size.width;
     return Scaffold(
-//      appBar: AppBar(
-//        backgroundColor: Colors.transparent,
-//        elevation: 0.0,
-//        leading: IconButton(
-//          icon: Icon(Icons.arrow_back),
-//          color: Colors.black,
-//          onPressed: () {
-//            Navigator.of(context).pop();
-//          },
-//        ),
-//      ),
-
-      body: Container(
-        color: Colors.deepPurpleAccent,
-        child: new Column(
-          children: <Widget>[
-            new Padding(
-              padding: EdgeInsets.only(top: 60),
-            ),
-            new Center(
-              child: Container(
-                width: 125.0,
-                height: 125.0,
-                //margin: EdgeInsets.only(top: 30.0),
-                decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: new DecorationImage(
-                    fit: BoxFit.fill,
-                    image: new NetworkImage(_newurl),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 25.0),
-            new Text(
-              (_newname),
-              style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: EdgeInsets.all(30.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '24K',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        'FOLLOWERS',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat', color: Colors.grey),
-                      )
-                    ],
-                  ),
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '$_newcount',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        'POST',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat', color: Colors.grey),
-                      )
-                    ],
-                  ),
-                  new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '21',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5.0),
-                      Text(
-                        'FOLLOWING',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat', color: Colors.grey),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//      backgroundColor: Colors.redAccent,
+      body: new Stack(
+        children: <Widget>[
+          ClipPath(
+            child: Container(color: Colors.redAccent.withOpacity(0.9)),
+            clipper: getClipper(),
+          ),
+          Positioned(
+            width: device_width,
+            top: MediaQuery.of(context).size.height / 5,
+            child: Column(
               children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.only(left: 20.0),
+                Container(
+                    width: 150.0,
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        image: DecorationImage(
+                            image: NetworkImage(_newurl), fit: BoxFit.cover),
+                        borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                        boxShadow: [
+                          BoxShadow(blurRadius: 7.0, color: Colors.black)
+                        ])),
+                SizedBox(height: 30.0),
+                Text(
+                  '$_newname',
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat'),
                 ),
-                new GestureDetector(
-
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>userpost()));
-
-                  },
-
-                  child: new Container(
-                    width: 135,
-                    height: 135,
-                    decoration: new BoxDecoration(
-//                    borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.transparent,
-                      border: Border.all(style: BorderStyle.solid),
-                    ),
-                    child: Center(
-                      child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Text(
-                            '$_newcount',
-                            style: new TextStyle(
-                              fontSize: 35,
-                              color: Colors.deepOrangeAccent,
-                            ),
-                          ),
-                          new Text(
-                            'POSTS',
-                            style: new TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                SizedBox(height: 15.0),
+                Text(
+                  'STATUS',
+                  style: TextStyle(
+                      fontSize: 17.0,
+                      fontStyle: FontStyle.italic,
+                      fontFamily: 'Montserrat'),
                 ),
-                new GestureDetector(
+                SizedBox(height: 25.0),
+                GestureDetector(
                   onTap: () {
-                    print('Tapped');
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => addimage()));
+                        MaterialPageRoute(builder: (context) => userpost()));
                   },
-                  child: new Container(
-                    width: 135,
-                    height: 135,
-                    decoration: new BoxDecoration(
-//                    borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.transparent,
-                      border: Border.all(style: BorderStyle.solid),
-                    ),
-                    child: Center(
-                      child: new Text(
-                        'ADD PHOTOS',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15,
+                  child: Container(
+                    height: 50.0,
+                    width: 150.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(25.0),
+                      shadowColor: Colors.greenAccent,
+                      color: Colors.green,
+                      elevation: 7.0,
+                      child: Center(
+                        child: Text(
+                          'POSTS',
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Montserrat',
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                new Padding(
-                  padding: EdgeInsets.only(right: 20.0),
-                ),
+                SizedBox(height: 25.0),
+                GestureDetector(
+                  onTap: (){
+                    signout();
+                    savedata(null, null, null, null, null);
+                    Save_SharedMessageData(null, null, null, null, null, null);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>homepage()));
+                  },
+                  child: Container(
+                      height: 50.0,
+                      width: 150.0,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        shadowColor: Colors.redAccent,
+                        color: Colors.red,
+                        elevation: 7.0,
+                        child: Center(
+                          child: Text(
+                            'Log out',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      )),
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -251,5 +180,22 @@ class _profileState extends State<profile> {
       print('Count of Message posted : $_newcount');
     });
   }
+}
 
+class getClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = new Path();
+
+    path.lineTo(0.0, size.height / 2);
+    path.lineTo(size.width + 125, 0.0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
 }

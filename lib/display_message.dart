@@ -57,12 +57,14 @@ class _displaymessageState extends State<displaymessage> {
   var _newurl = '';
   var _newmessage = '';
   var _newmessagetimestamp;
-
   var _sendername = '';
   var _senderimageurl = '';
-
   var _message;
+
   final formKey = new GlobalKey<FormState>();
+
+  List commentlist = [];
+  List likelist = [];
 
   DatabaseReference ref = FirebaseDatabase.instance.reference();
 
@@ -80,6 +82,7 @@ class _displaymessageState extends State<displaymessage> {
     setState(() {});
 
     _comments();
+    _likes();
 
     super.initState();
   }
@@ -96,21 +99,17 @@ class _displaymessageState extends State<displaymessage> {
           var keys = snap.value.keys;
           var data = snap.value;
 
-          List list = [];
-
           for (var key in keys) {
             print('this is keys :$key');
             if (key != 'no-comments') {
-              list.add(key);
-              list.sort();
+              commentlist.add(key);
+              commentlist.sort();
             } else if (key == 'no-comments') {
               print('its found :$key');
             }
           }
 
-          var reversed = list.reversed;
-
-          for (var newlist in reversed) {
+          for (var newlist in commentlist) {
             myComment d = new myComment(
               data[newlist]['name'],
               data[newlist]['comment'],
@@ -124,7 +123,31 @@ class _displaymessageState extends State<displaymessage> {
     });
   }
 
+  Future<String> _likes() async {
+    await new Future.delayed(new Duration(milliseconds: 100), () {
+      ref
+          .child('node-name')
+          .child('$_newmessagetimestamp')
+          .child('likes')
+          .once()
+          .then(
+        (DataSnapshot snap) {
+          var keys = snap.value.keys;
+          var data = snap.value;
 
+          for (var key in keys) {
+            print('this is keys :$key');
+            if (key != 'no-likes') {
+              likelist.add(key);
+            } else if (key == 'no-likes') {
+              print('its found :$key');
+            }
+          }
+          setState(() {});
+        },
+      );
+    });
+  }
 
 //  var timestamp = new DateTime.now().millisecondsSinceEpoch;
 
@@ -237,27 +260,49 @@ class _displaymessageState extends State<displaymessage> {
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      new GestureDetector(
-                        onTap: () {
-                          // Update -> like message and display total count of like in profile
-                        },
-                        child: new Icon(
-                          Icons.thumb_up,
-                          size: 25,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          new GestureDetector(
+                            onTap: () {
+                              // Update -> like message and display total count of like in profile
+                            },
+                            child: new Icon(
+                              Icons.thumb_up,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                          new Padding(
+                            padding: new EdgeInsets.only(right: 3.0),
+                          ),
+                          new Text(
+                            '${likelist.length}',
+                            style: new TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                      new GestureDetector(
-                        onTap: () {
-                          var time = new DateTime.now();
-                          print('$time');
-
-                        },
-                        child: new Icon(
-                          Icons.chat_bubble_outline,
-                          size: 25,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          new GestureDetector(
+                            onTap: () {
+                              var time = new DateTime.now();
+                              print('$time');
+                            },
+                            child: new Icon(
+                              Icons.chat_bubble_outline,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                          ),
+                          new Text(
+                            '${commentlist.length}',
+                            style: new TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                       new GestureDetector(
                         onTap: () {
@@ -381,7 +426,10 @@ class _displaymessageState extends State<displaymessage> {
                       onTap: () {
                         submit_comment();
                         display_textbox = false;
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => displaymessage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => displaymessage()));
                         setState(
                           () {},
                         );
@@ -414,9 +462,6 @@ class _displaymessageState extends State<displaymessage> {
   Widget commentUI(String cmnt_name, String cmnt_image, String cmnt) {
     return Column(
       children: <Widget>[
-//        new Padding(
-//          padding: new EdgeInsets.only(top: 15.0),
-//        ),
         new Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -437,31 +482,36 @@ class _displaymessageState extends State<displaymessage> {
             new Padding(
               padding: new EdgeInsets.only(left: 15.0),
             ),
-            new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  '$cmnt',
-                  style: new TextStyle(
+            Expanded(
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Text(
+                    '$cmnt',
+                    maxLines: 2,
+                    style: new TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
-                      fontSize: 15.0),
-                  textAlign: TextAlign.start,
-                ),
-                new Text(
-                  '$cmnt_name',
-                  style: new TextStyle(
+                      fontSize: 15.0,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                  new Padding(
+                    padding: new EdgeInsets.only(bottom: 3.0),
+                  ),
+                  new Text(
+                    '$cmnt_name',
+                    style: new TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 10),
-                )
-              ],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
             ),
           ],
         ),
-//        new Padding(
-//          padding: new EdgeInsets.only(top: 5.0),
-//        ),
         new Divider(
           color: Colors.black,
         )
