@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebaseapp/ShowDataPage.dart';
 import 'package:time_machine/time_machine.dart';
 
+
 class SubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,28 +49,44 @@ class _FormPageState extends State<FormPage> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
 
-  String _newname;
-  String _newurl;
-  String _newemail;
-  String _userid;
+  String _newname, _newurl, _newemail, _userid;
 
   static DatabaseReference ref = FirebaseDatabase.instance.reference();
   String _message;
+  var report_status;
 
   @override
   void initState() {
-
-
     // TODO: implement initState
+
     getname().then(updatename);
     getdata().then(updateurl);
     getemail().then(updateemail);
     getuserid().then(updateuserid);
+    reportstatus();
     super.initState();
+  }
+
+  Future reportstatus() async {
+    await Future.delayed(Duration(milliseconds: 100), () {
+      ref
+          .child('user')
+          .child('$_userid')
+          .child('Report')
+          .once()
+          .then((DataSnapshot snap) {
+        var data = snap.value;
+        print('value of data :$data');
+        setState(() {
+          report_status = data;
+        });
+      });
+    });
   }
 
   void _submit() {
     final form = formKey.currentState;
+    print("name :$_newname");
     if (form.validate()) {
       form.save();
       submitmessage();
@@ -77,10 +94,8 @@ class _FormPageState extends State<FormPage> {
   }
 
   void submitmessage() {
-
     var now = Instant.now();
     var time = now.toString('yyyyMMddHHmmss');
-
     print('this is post time :$time');
 
     var date_day = new DateTime.now().day;
@@ -93,7 +108,7 @@ class _FormPageState extends State<FormPage> {
         ':' +
         date_year.toString();
 
-    if (_newname.isNotEmpty && _message.isNotEmpty) {
+    if (_newname.isNotEmpty && _message.isNotEmpty != null && report_status != 'true') {
       ref.child('node-name').child('$time').child('name').set('$_newname');
       ref.child('node-name').child('$time').child('message').set('$_message');
       ref.child('node-name').child('$time').child('msgtime').set('$date');
@@ -102,17 +117,26 @@ class _FormPageState extends State<FormPage> {
       ref.child('node-name').child('$time').child('userid').set('$_userid');
       ref.child('node-name').child('$time').child('comments').child('no-comments').set('1');
       ref.child('node-name').child('$time').child('likes').child('no-likes').set('1');
-
       ref.child('user').child('$_userid').child('$time').child('message').set('$_message');
       ref.child('user').child('$_userid').child('$time').child('msgtime').set('$date');
       ref.child('user').child('$_userid').child('name').set('$_newname');
       ref.child('user').child('$_userid').child('imageurl').set('$_newurl');
-    }
 
-    // ignore: return_of_invalid_type_from_closure
-    Navigator.of(context).pop();
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ShowDataPage()));
+      Navigator.of(context).pop();
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ShowDataPage()));
+    } else if (report_status == 'true') {
+      _snackbar();
+    }
+  }
+
+  _snackbar() {
+    final snackbar = new SnackBar(
+      content: new Text('You have been reported'),
+      duration: new Duration(milliseconds: 2000),
+      backgroundColor: Colors.red,
+    );
+    scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
   @override
@@ -150,7 +174,7 @@ class _FormPageState extends State<FormPage> {
                 ],
               ),
               new Container(
-                height: deviceheight-keyboardheight-250,
+                height: deviceheight - keyboardheight - 250,
                 child: TextFormField(
                   autocorrect: true,
                   scrollPadding: const EdgeInsets.all(20.0),
@@ -171,7 +195,6 @@ class _FormPageState extends State<FormPage> {
               new InkWell(
                 onTap: () {
                   _submit();
-                  print('this is device height :$deviceheight');
                 },
                 child: Container(
                   width: 150,

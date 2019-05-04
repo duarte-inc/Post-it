@@ -72,11 +72,8 @@ class _userpostState extends State<userpost> {
 
           for(var y in key){
             print('this is y :$y');
-            if(y=='name'){
+            if(y=='name' || y=='about' || y=='imageurl' || y=='Report'){
               print('name :$y');
-            }
-            else if(y=='imageurl'){
-              print('imageurl :$y');
             }
             else{
               print('normal :$y');

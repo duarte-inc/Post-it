@@ -12,6 +12,7 @@ void main() => runApp(
         home: homepage(),
         debugShowCheckedModeBanner: false,
         title: 'Post-it',
+        theme: new ThemeData(primarySwatch: Colors.deepPurple),
         color: Colors.deepPurpleAccent,
       ),
     );
@@ -24,13 +25,17 @@ class homepage extends StatefulWidget {
 Future<String> getaccesstoken() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String token = preferences.getString('token');
+  print('this is token :$token');
   return token;
 }
 
 class _homepageState extends State<homepage> {
+  var _token;
+
   final FirebaseAuth _fAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = new GoogleSignIn();
 
+  DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   //Remember to remove both key
   //you have to fill the form to get api and secret key
@@ -39,9 +44,6 @@ class _homepageState extends State<homepage> {
     consumerSecret: 'ZECGsI6UUDBEUVGkJe4S5vd0FGqGxC3wMJCgsXgPRfjSwRFnyH',
   );
 
-  var _token;
-
-  var _display = '';
 
 
   //Google login
@@ -55,11 +57,9 @@ class _homepageState extends State<homepage> {
     var photourl = user.photoUrl;
     var useremail = user.email;
     var userid = googleSignInAccount.id;
-
-    _display = displayname;
-    savealldata(photourl, displayname, useremail, userid, gSA.accessToken);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (contet) => ShowDataPage()));
+    var token = gSA.accessToken;
+    savealldata(photourl, displayname, useremail, userid, token);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ShowDataPage()));
 
     print('is this gsa :$gSA');
     print('is this token :${gSA.idToken}');
@@ -67,8 +67,9 @@ class _homepageState extends State<homepage> {
     print('is this proverid :${user.providerId}');
     print('googlesigninaccount id :${googleSignInAccount.id}');
 
-    DatabaseReference ref = FirebaseDatabase.instance.reference();
-//    ref.child('user').child('$userid').child('no-post').set('default post');
+    ref.child('user').child(userid).child('imageurl').set(photourl);
+    ref.child('user').child(userid).child('name').set(displayname);
+
     return null;
   }
 
@@ -90,7 +91,7 @@ class _homepageState extends State<homepage> {
         print('${result.session.token}');
         savealldata(image, name, null, userid, accesstoken);
         Navigator.push(
-            context, MaterialPageRoute(builder: (contet) => ShowDataPage()));
+            context, MaterialPageRoute(builder: (context) => ShowDataPage()));
         break;
       case TwitterLoginStatus.cancelledByUser:
         break;
@@ -101,10 +102,9 @@ class _homepageState extends State<homepage> {
 
   @override
   void initState() {
-
     // TODO: implement initState
-    getaccesstoken().then(updatetoken);
     _gettoken();
+    getaccesstoken().then(updatetoken);
     super.initState();
   }
 
@@ -112,8 +112,7 @@ class _homepageState extends State<homepage> {
   // If token is present it will redirect to the homepage otherwise landing / login page
   Future<String> _gettoken() async {
     await new Future.delayed(
-      new Duration(milliseconds: 1000),
-      () {
+      new Duration(milliseconds: 800), () {
         print('this is received token :$_token');
 
         if (_token != null) {
@@ -132,11 +131,12 @@ class _homepageState extends State<homepage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return WillPopScope(
+    return
+    WillPopScope(
       onWillPop: () async=> false,
       child: Scaffold(
         body: Center(
-          child: new Container(
+          child: Container(
             child: Padding(
               padding: EdgeInsets.all(20.0),
               child: new Column(
@@ -233,8 +233,7 @@ class _homepageState extends State<homepage> {
 }
   // Shared preference is used to store data so that data not have to be taken from database again and again
   // Storing data like : imageurl, name, email, userid, and token
-Future<bool> savedata(String imageurl, String name, String email, String userid,
-    String token) async {
+Future<bool> savedata(String imageurl, String name, String email, String userid, String token) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString("image", imageurl);
   prefs.setString('name', name);

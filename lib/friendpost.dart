@@ -72,11 +72,8 @@ class _friendpostState extends State<friendpost> {
 
           for(var y in key){
             print('this is y :$y');
-            if(y=='name'){
+            if(y=='name' || y=='Report' || y=='imageurl'){
               print('name :$y');
-            }
-            else if(y=='imageurl'){
-              print('imageurl :$y');
             }
             else{
               print('normal :$y');
