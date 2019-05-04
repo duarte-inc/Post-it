@@ -40,8 +40,8 @@ class _homepageState extends State<homepage> {
   //Remember to remove both key
   //you have to fill the form to get api and secret key
   static final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: 'kkOvaF1Mowy4JTvCxKTV5O1WF',
-    consumerSecret: 'ZECGsI6UUDBEUVGkJe4S5vd0FGqGxC3wMJCgsXgPRfjSwRFnyH',
+    consumerKey: 'your key',
+    consumerSecret: 'your secret key',
   );
 
 
