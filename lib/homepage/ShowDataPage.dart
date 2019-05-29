@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebaseapp/myData.dart';
+import 'package:firebaseapp/data/myData.dart';
 import 'dart:async';
-import 'package:firebaseapp/SubmitForm.dart';
+import 'package:firebaseapp/user/SubmitForm.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:firebaseapp/profile.dart';
+import 'package:firebaseapp/user/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' show Random;
-import 'package:firebaseapp/display_message.dart';
-import 'package:firebaseapp/friendprofile.dart';
-import 'package:firebaseapp/about.dart';
-import 'package:firebaseapp/Setting.dart';
+import 'package:firebaseapp/homepage/display_message.dart';
+import 'package:firebaseapp/friend/friendprofile.dart';
+import 'package:firebaseapp/function/about.dart';
+import 'package:firebaseapp/function/Setting.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ShowDataPage extends StatefulWidget {
@@ -82,7 +81,10 @@ class _ShowDataPageState extends State<ShowDataPage> {
     //the data is stored using time so that we can sort the key and retrieve it in that format
     //snap.value will give the json format value and snap.value.key will give all the child/key the json contains.
 
-    ref.child('node-name').once().then((DataSnapshot snap) {
+
+
+
+    ref.child('node-name').limitToLast(10).once().then((DataSnapshot snap) {
       var keys = snap.value.keys;
       var data = snap.value;
 
@@ -99,14 +101,8 @@ class _ShowDataPageState extends State<ShowDataPage> {
         //counting the number of comment the post got.
         //so that the user will get to know the amount of comments that his/her post got
 
-        ref
-            .child('node-name')
-            .child('$newlist')
-            .child('comments')
-            .once()
-            .then((DataSnapshot datasnap) {
+        ref.child('node-name').child('$newlist').child('comments').once().then((DataSnapshot datasnap) {
           var key = datasnap.value.keys;
-          var commentsnap = datasnap.value;
 
           for (var x in key) {
             if (x != 'no-comments') {
@@ -132,14 +128,11 @@ class _ShowDataPageState extends State<ShowDataPage> {
             .once()
             .then((DataSnapshot datasnap) {
           var key = datasnap.value.keys;
-          var likesnap = datasnap.value;
-
           for (var x in key) {
             if (x != 'no-likes') {
               likecount = likecount + 1;
             } else if (x == 'no-comments') {}
           }
-          ;
           countoflikes.add(likecount);
           likecount = 0;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebaseapp/ShowDataPage.dart';
+import 'package:firebaseapp/homepage/ShowDataPage.dart';
 import 'package:time_machine/time_machine.dart';
 
 
@@ -156,7 +156,7 @@ class _FormPageState extends State<FormPage> {
         ),
       ),
       body: new Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(top: 20.0, left: 10.0, right: 10.0),
         child: new Form(
           key: formKey,
           child: new Column(
@@ -174,11 +174,12 @@ class _FormPageState extends State<FormPage> {
                 ],
               ),
               new Container(
-                height: deviceheight - keyboardheight - 250,
+                height: deviceheight - keyboardheight - 200,
                 child: TextFormField(
+                  cursorColor: Colors.deepPurpleAccent,
                   autocorrect: true,
                   scrollPadding: const EdgeInsets.all(20.0),
-                  style: TextStyle(fontSize: 20.0, color: Colors.black),
+                  style: TextStyle(fontSize: 22.0, color: Colors.black),
                   autofocus: true,
                   decoration: new InputDecoration(
                       hasFloatingPlaceholder: false, errorMaxLines: 3),
@@ -190,7 +191,7 @@ class _FormPageState extends State<FormPage> {
                 ),
               ),
               new Padding(
-                padding: const EdgeInsets.only(top: 50.0),
+                padding: const EdgeInsets.only(top: 26.0),
               ),
               new InkWell(
                 onTap: () {

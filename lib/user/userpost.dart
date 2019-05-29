@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebaseapp/myData.dart';
+import 'package:firebaseapp/data/myData.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:firebaseapp/userpostdata.dart';
+import 'package:firebaseapp/user/userpostdata.dart';
 
 class userpost extends StatefulWidget {
   @override

@@ -3,9 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebaseapp/userpost.dart';
+import 'package:firebaseapp/user/userpost.dart';
 import 'package:firebaseapp/main.dart';
-import 'package:firebaseapp/ShowDataPage.dart';
+import 'package:firebaseapp/homepage/ShowDataPage.dart';
+import 'package:firebaseapp/followers/followers.dart';
 
 class profile extends StatefulWidget {
   @override
@@ -135,6 +136,31 @@ class _profileState extends State<profile> {
                     signout();
                     savedata(null, null, null, null, null);
                     Save_SharedMessageData(null, null, null, null, null, null);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>followers()));
+                  },
+                  child: Container(
+                      height: 50.0,
+                      width: 150.0,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(25.0),
+                        shadowColor: Colors.redAccent,
+                        color: Colors.red,
+                        elevation: 7.0,
+                        child: Center(
+                          child: Text(
+                            'Followers',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Montserrat'),
+                          ),
+                        ),
+                      )),
+                ),
+                SizedBox(height: 25.0),
+                GestureDetector(
+                  onTap: (){
+                    signout();
+                    savedata(null, null, null, null, null);
+                    Save_SharedMessageData(null, null, null, null, null, null);
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>homepage()));
                   },
                   child: Container(
@@ -153,7 +179,8 @@ class _profileState extends State<profile> {
                           ),
                         ),
                       )),
-                )
+                ),
+
               ],
             ),
           )

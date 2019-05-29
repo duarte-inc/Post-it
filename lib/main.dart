@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebaseapp/ShowDataPage.dart';
+import 'package:firebaseapp/homepage/ShowDataPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -40,8 +40,8 @@ class _homepageState extends State<homepage> {
   //Remember to remove both key
   //you have to fill the form to get api and secret key
   static final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: 'your key',
-    consumerSecret: 'your secret key',
+    consumerKey: 'RJuHNmCNKx3FDanlG0AFeQfsk',
+    consumerSecret: '5UMj7QVGHkXpbCIx8SKjS5ofEWlR7ds6DNqPJBmuXuFy97rYNH',
   );
 
 

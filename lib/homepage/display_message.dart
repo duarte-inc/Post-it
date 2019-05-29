@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebaseapp/myComment.dart';
+import 'package:firebaseapp/data/myComment.dart';
 import 'package:time_machine/time_machine.dart';
 
 class displaymessage extends StatefulWidget {
