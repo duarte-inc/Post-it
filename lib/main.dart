@@ -38,11 +38,13 @@ class _homepageState extends State<homepage> {
   DatabaseReference ref = FirebaseDatabase.instance.reference();
 
   //Remember to remove both key
-  //you have to fill the form to get api and secret key
+  //you have to fill the form to get api and secret key 
+  //contact me if you want the key to check the functionality      
   static final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: 'RJuHNmCNKx3FDanlG0AFeQfsk',
-    consumerSecret: '5UMj7QVGHkXpbCIx8SKjS5ofEWlR7ds6DNqPJBmuXuFy97rYNH',
+    consumerKey: 'Enter your api key',
+    consumerSecret: 'Enter your secret key',
   );
+  
 
 
 
